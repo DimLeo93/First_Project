@@ -48,7 +48,7 @@ input[type=text]:focus {
                     <?php  echo "<a href=create.php?"."'>Click to add user</a>"; ?> <p>
 
                      <form action="search.php" method="post"> 
-                         <input type="text" name="term" placeholder= "Search.." /><br /> 
+                         <input type="text" name="prefix" placeholder= "Search.." /><br /> 
                         <input type="submit" value="Submit" /> 
                     </form> 
 
