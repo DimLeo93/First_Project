@@ -2,22 +2,24 @@
  <html>
 <body>
 
-<form action="" method="post" enctype="multipart/form-data">
-Select image:   <input type="file" name="fileToUpload" id="fileToUpload"> <br>
-Id: <input type="text" name="Id"><br>
-first_name: <input type="text" name="first_name"><br>
-last_name: <input type="text" name="last_name"><br>
-email: <input type="text" name="email"><br>
+<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" enctype="multipart/form-data">
+Select image:   <input type="file" name="fileToUpload" id="fileToUpload"  maxlength="92" required> <br>
+first_name: <input type="text" name="first_name"  maxlength="50" placeholder="John" required><br>
+last_name: <input type="text" name="last_name" maxlength="50" placeholder="Doe" required><br>
+email: <input type="email" name="email" maxlength="60" placeholder="example@domain.com" required><br>
 <input type="submit" name="submit"  value="Create User">
 </form>
 
 <?php
-if ($_POST['submit']) {
 include 'connect.php';
+$_GET   = filter_input_array(INPUT_GET, FILTER_SANITIZE_STRING);
+$_POST  = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+if ($_POST['submit']) {
 
 $target_dir = "uploads/";
 $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
 $uploadOk = 1;
+$uploadfinal = 0;
 $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
 // Check if image file is a actual image or fake image
 if(isset($_POST["submit"])) {
@@ -52,20 +54,39 @@ if ($uploadOk == 0) {
     echo "Sorry, your file was not uploaded.";
 // if everything is ok, try to upload file
 } else {
-    if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+    $uploadfinal=1;
+}
+if($uploadfinal == 1){
+
+    $result2 = mysqli_query($conn, "SELECT count(*) FROM users");
+    $row2 = $result2->fetch_row();
+    $row2[0]++;
+
+    $sql = "INSERT INTO users (Id, first_name, last_name, email,user_image)
+    VALUES ('$row2[0]','".$_POST['first_name']."', '".$_POST['last_name']."','".$_POST['email']."','$target_file')";
+
+if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file) ) {
         echo "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.";
+        $bool = true;
+
     } else {
         echo "Sorry, there was an error uploading your file.";
+        $bool = false;
     }
+    //if image gets uploaded succesfully, add the user too
+if($bool){
+    if (mysqli_query($conn, $sql)) {
+        echo "User updated successfully";
+    } else {
+        unlink($target_file); //if the create has an error, delete the new picture that was uploaded
+        echo "image has been deleted";
+        echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+    } 
 }
+
 }
-/*
-if ($conn->query($sql) === TRUE) {
-    echo "New record created successfully";
-} else {
-    echo "Error: " . $sql . "<br>" . $conn->error;
+
 }
-*/
 ?>
 
 </body>
