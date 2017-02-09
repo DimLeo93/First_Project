@@ -26,6 +26,7 @@
 <?php
 include 'connect.php';
  require_once 'paginator.php';
+ include 'header.php';
 
     $limit      = ( isset( $_GET['limit'] ) ) ? $_GET['limit'] : 5;
     $page       = ( isset( $_GET['page'] ) ) ? $_GET['page'] : 1;

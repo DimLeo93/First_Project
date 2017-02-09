@@ -1,6 +1,7 @@
  
  <?php
  include 'connect.php'; 
+ include 'header.php';
 
 // sql to delete a record
 $_GET   = filter_input_array(INPUT_GET, FILTER_SANITIZE_STRING);
