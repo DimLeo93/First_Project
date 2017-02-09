@@ -34,7 +34,7 @@ include 'header.php';
             <div class="form-group">
                 <label class="control-label col-sm-2" for="fileToUpload">Upload Image:</label>
                 <div class="col-sm-10">
-                <input type="file" hidden name="fileToUpload" class="form-control" value=<?php echo htmlspecialchars($def_image); ?> id="fileToUpload"></label>
+                <input type="file" hidden name="fileToUpload" class="form-control" value=<?php echo htmlspecialchars($def_image); ?> id="fileToUpload" required></label>
                 </div>
             </div>  
             <div class="form-group">        

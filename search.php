@@ -24,8 +24,7 @@
     </head>
 
 <?php
-require_once 'initial.php';
-include 'connect.php';
+ include 'connect.php';
  require_once 'paginator.php';
  include 'header.php';
 

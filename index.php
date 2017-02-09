@@ -27,7 +27,6 @@ input[type=text]:focus {
     <?php
     $_GET   = filter_input_array(INPUT_GET, FILTER_SANITIZE_STRING);
     $_POST  = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-    require_once 'initial.php';
     require_once 'paginator.php';
     require 'connect.php';
     include 'header.php';
@@ -52,7 +51,7 @@ input[type=text]:focus {
                          <input type="text" name="prefix" placeholder= "Search.." /><br /> 
                         <input type="submit" value="Submit" /> 
                     </form> 
-                    
+
                 <?php echo $Paginator->createLinks( $links, 'pagination pagination-sm' ); ?>
                 <table class="table table-striped table-condensed table-bordered table-rounded">
                         <thead>
