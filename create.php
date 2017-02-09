@@ -68,7 +68,7 @@ $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
 if(isset($_POST["submit"])) {
     $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
     if($check !== false) {
-        echo "File is an image - " . $check["mime"] . ".";
+        //echo "File is an image - " . $check["mime"] . ".";
         $uploadOk = 1;
     } else {
         echo "File is not an image.";
@@ -78,23 +78,23 @@ if(isset($_POST["submit"])) {
 
 // Check if file already exists
 if (file_exists($target_file)) {
-    echo "Sorry, file already exists.";
+    echo "Sorry, file already exists." .  "<br/>\n";
     $uploadOk = 0;
 }
 // Check file size
 if ($_FILES["fileToUpload"]["size"] > 500000) {
-    echo "Sorry, your file is too large.";
+    echo "Sorry, your file is too large." .  "<br/>\n";
     $uploadOk = 0;
 }
 // Allow certain file formats
 if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
 && $imageFileType != "gif" ) {
-    echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+    echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed." .  "<br/>\n";
     $uploadOk = 0;
 }
 // Check if $uploadOk is set to 0 by an error
 if ($uploadOk == 0) {
-    echo "Sorry, your file was not uploaded.";
+    echo "Sorry, your file was not uploaded." .  "<br/>\n";
 // if everything is ok, try to upload file
 } else {
     $uploadfinal=1;
@@ -109,20 +109,19 @@ if($uploadfinal == 1){
     VALUES ('$row2[0]','".$_POST['first_name']."', '".$_POST['last_name']."','".$_POST['email']."','$target_file')";
 
 if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file) ) {
-        echo "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.";
+        //echo "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.";
         $bool = true;
 
     } else {
-        echo "Sorry, there was an error uploading your file.";
+        echo "Sorry, there was an error uploading your file." .  "<br/>\n";
         $bool = false;
     }
-    //if image gets uploaded succesfully, add the user too
 if($bool){
     if (mysqli_query($conn, $sql)) {
-        echo "User updated successfully";
+        echo "User added";
     } else {
         unlink($target_file); //if the create has an error, delete the new picture that was uploaded
-        echo "image has been deleted";
+        echo "image has been deleted" .  "<br/>\n";
         echo "Error: " . $sql . "<br>" . mysqli_error($conn);
     } 
 }

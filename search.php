@@ -24,6 +24,7 @@
     </head>
 
 <?php
+require_once 'initial.php';
 include 'connect.php';
  require_once 'paginator.php';
  include 'header.php';
@@ -31,11 +32,15 @@ include 'connect.php';
     $limit      = ( isset( $_GET['limit'] ) ) ? $_GET['limit'] : 5;
     $page       = ( isset( $_GET['page'] ) ) ? $_GET['page'] : 1;
     $links      = ( isset( $_GET['links'] ) ) ? $_GET['links'] : 7;    
-    $query = "SELECT * FROM users WHERE ( first_name LIKE  '%".$_POST['prefix']."%' OR last_name LIKE  '%".$_POST['prefix']."%')";
+
+    $query = "SELECT * FROM users";
 
     $Paginator  = new Paginator( $conn, $query );
+    if ($_POST['submit']) {
+        $GLOBALS['pref']=$_POST['prefix'];
+    }
+
     $results    = $Paginator->getData( $limit, $page );
-    
 
 ?>
 
@@ -44,7 +49,7 @@ include 'connect.php';
                     <h1> Search results </h1>
                      <form action="" method="post"> 
                          <input type="text" name="prefix" placeholder= "Search.." /><br /> 
-                        <input type="submit" value="Submit" /> 
+                        <input type="submit" value="Submit" name="submit" /> 
                     </form> 
 
                 <table class="table table-striped table-condensed table-bordered table-rounded">
@@ -71,7 +76,7 @@ include 'connect.php';
                             <?php endfor; ?>                   
                         </tbody>
                 </table>
-                 <?php echo $Paginator->createLinks( $links, 'pagination pagination-sm' ); ?>
+                 <?php echo $Paginator->createLinks( $links, 'pagination pagination-sm'); ?>
                 </div>
         </div>
 

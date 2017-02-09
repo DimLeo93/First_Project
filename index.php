@@ -27,7 +27,7 @@ input[type=text]:focus {
     <?php
     $_GET   = filter_input_array(INPUT_GET, FILTER_SANITIZE_STRING);
     $_POST  = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-
+    require_once 'initial.php';
     require_once 'paginator.php';
     require 'connect.php';
     include 'header.php';
@@ -52,27 +52,36 @@ input[type=text]:focus {
                          <input type="text" name="prefix" placeholder= "Search.." /><br /> 
                         <input type="submit" value="Submit" /> 
                     </form> 
-
+                    
+                <?php echo $Paginator->createLinks( $links, 'pagination pagination-sm' ); ?>
                 <table class="table table-striped table-condensed table-bordered table-rounded">
                         <thead>
                                 <tr>
+                                <th>Photo</th>
                                 <th>Name</th>
                                 <th width="20%">Surname</th>
                                 <th width="20%">Email Address</th>
                                 <th>Details</th>
-                                <th>Update</th>
+                                <th>Update Info</th>
+                                <th>Change Image</th>
                                 <th>Delete</th>
                         </tr>
                         </thead>
                         <tbody>
-                            <?php for( $i = 0; $i < count( $results->data ); $i++ ) : ?>
+                            <?php for( $i = 0; $i < count( $results->data ); $i++ ) : 
+                                   if($results->data[$i]['user_image']==NULL){
+                                        $results->data[$i]['user_image'] = 'uploads/default.jpg';
+                                   }
+                                   ?>
                                     <tr>
-                                            <td><?php echo $results->data[$i]['first_name']; ?></td>
-                                            <td><?php echo $results->data[$i]['last_name']; ?></td>
-                                            <td><?php echo $results->data[$i]['email']; ?></td>  
-                                            <td><?php  echo "<a href='view.php?id=". $results->data[$i]['Id'] ."'>Click to view details</a>"; ?></td>
-                                            <td><?php  echo "<a href='update.php?id=".$results->data[$i]['Id']."'>Click to update user</a>"; ?></td>
-                                            <td><?php  echo "<a href=delete.php?id=".$results->data[$i]['Id']."'>Click to remove user</a>"; ?></td>  
+                                        <td><img src=<?php  echo $results->data[$i]['user_image']; ?> alt="Profile Photo" style="width:60px;height:60px;"></td>
+                                        <td><?php echo $results->data[$i]['first_name']; ?></td>
+                                        <td><?php echo $results->data[$i]['last_name']; ?></td>
+                                        <td><?php echo $results->data[$i]['email']; ?></td>  
+                                        <td><?php  echo "<a href='view.php?id=". $results->data[$i]['Id'] ."'>View details</a>"; ?></td>
+                                        <td><?php  echo "<a href='update.php?id=".$results->data[$i]['Id']."'>Update User Info</a>"; ?></td>
+                                        <td><?php  echo "<a href='update_image.php?id=".$results->data[$i]['Id']."'>Change Image</a>"; ?></td>
+                                        <td><?php  echo "<a href=delete.php?id=".$results->data[$i]['Id']."'>Remove user</a>"; ?></td>  
                                     </tr>
                             <?php endfor; ?>                        
                         </tbody>

@@ -1,3 +1,4 @@
+<html>
 <?php
  
 class Paginator {
@@ -17,19 +18,26 @@ public function __construct( $conn, $query ) {
  
     $rs= $this->_conn->query( $this->_query );
     $this->_total = $rs->num_rows;
-     
 }
 
-public function getData( $limit , $page  ) {
+public function getData( $limit , $page ) {
      
     $this->_limit   = $limit;
     $this->_page    = $page;
- 
+    
+    if($GLOBALS['pref'] == ""){ 
+        $query      = $this->_query;
+      //  echo "1 global is " . $GLOBALS['pref'];
+    } else {
+       // echo "2 global is " . $GLOBALS['pref']; 
+        $query      = $this->_query." WHERE ( first_name LIKE  '%".$GLOBALS['pref']."%' OR last_name LIKE '%".$GLOBALS['pref']."%')";   
+    }
     if ( $this->_limit == 'all' ) {
         $query      = $this->_query;
     } else {
         $query      = $this->_query . " LIMIT " . ( ( $this->_page - 1 ) * $this->_limit ) . ", $this->_limit";
     }
+    // echo $query; 
     $rs             = $this->_conn->query( $query );
  
     while ( $row = $rs->fetch_assoc() ) {
@@ -45,11 +53,11 @@ public function getData( $limit , $page  ) {
     return $result;
 }
 
-public function createLinks( $links, $list_class ) {
+public function createLinks( $links, $list_class) {
     if ( $this->_limit == 'all' ) {
         return '';
     }
- 
+
     $last       = ceil( $this->_total / $this->_limit );
  
     $start      = ( ( $this->_page - $links ) > 0 ) ? $this->_page - $links : 1;
@@ -61,7 +69,7 @@ public function createLinks( $links, $list_class ) {
     $html       .= '<li class="' . $class . '"><a href="?limit=' . $this->_limit . '&page=' . ( $this->_page - 1 ) . '">&laquo;</a></li>';
  
     if ( $start > 1 ) {
-        $html   .= '<li><a href="?limit=' . $this->_limit . '&page=1">1</a></li>';
+        $html   .= '<li><a href="?limit=' . $this->_limit . '&page=1">1  </a></li>';
         $html   .= '<li class="disabled"><span>...</span></li>';
     }
  
@@ -85,3 +93,4 @@ public function createLinks( $links, $list_class ) {
 
 }
 ?>
+</html>
