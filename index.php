@@ -93,7 +93,7 @@ $total_pages = ceil($row['total'] / $results_per_page); // calculate total pages
                         <td><?php echo $results[$i]['email']; ?></td>  
                         <td><?php  echo "<a href='view.php?id=".$results[$i]['Id']."'>View details</a>"; ?></td>
                         <td><?php  echo "<a href='update.php?id=".$results[$i]['Id']."'>Update User Info</a>"; ?></td>
-                        <td><?php  echo "<a href='update_image.php?id=".$results['Id']."'>Change Image</a>"; ?></td>
+                        <td><?php  echo "<a href='update_image.php?id=".$results[$i]['Id']."'>Change Photo</a>"; ?></td>
                         <td><?php  echo "<a  href='delete.php?id=".$results[$i]['Id']."' >Remove User</a>"; ?></td>
                     </tr>
                 <?php endfor; ?>                   

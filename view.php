@@ -26,7 +26,11 @@ $result = mysqli_query($conn, $sql);
       </tr>
     </thead>
     <tbody>
-      <?php while($row = $result->fetch_assoc()) { ?>
+      <?php while($row = $result->fetch_assoc()) { 
+             if($row["user_image"]== NULL){
+              $row["user_image"] = "uploads/default.jpg";
+            }
+          ?>
       <tr>
         <td><img src=<?php  echo $row['user_image']; ?> alt="Profile Photo" style="width:60px;height:60px;"></td>
         <td><?php echo $row['first_name']; ?></td>
