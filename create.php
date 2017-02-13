@@ -28,19 +28,19 @@
     <div class="form-group">
       <label class="control-label col-sm-2" for="email">Email:</label>
       <div class="col-sm-10">          
-       <input type="email" class="form-control" id="email" name="email" maxlength="60" placeholder="example@domain.com" required><br>
+       <input type="email" class="form-control" id="email" name="email" value="<?=@$email?>" maxlength="60" placeholder="example@domain.com" required><br>
       </div>
     </div>
     <div class="form-group">
       <label class="control-label col-sm-2" for="first_name">First Name:</label>
       <div class="col-sm-10">          
-    <input type="text" class="form-control" name="first_name" id="first_name" maxlength="50" placeholder="John" required><br>
+    <input type="text" class="form-control" name="first_name" id="first_name" value="<?=@$first_name?>" maxlength="50" placeholder="John" required><br>
       </div>
     </div>
         <div class="form-group">
       <label class="control-label col-sm-2" for="email">Last Name:</label>
       <div class="col-sm-10">          
-    <input type="text" class="form-control" name="last_name" id="last_name" maxlength="50" placeholder="Doe" required><br>
+    <input type="text" class="form-control" name="last_name" id="last_name" value="<?=@$last_name?>" maxlength="50" placeholder="Doe" required><br>
       </div>
     </div>
     <div class="form-group">        
@@ -58,14 +58,53 @@ include 'connect.php';
 $_GET   = filter_input_array(INPUT_GET, FILTER_SANITIZE_STRING);
 $_POST  = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 if ($_POST['submit']) {
+    $verifyOk = 1;
+	#### removing extra white spaces & escaping harmful characters ####
+	$first_name 		= trim($_POST['first_name']);
+	$last_name 			= trim($_POST['last_name']);
+	$email 				= $_POST['email'];
 
+	# Validate First Name #
+		// if its not alpha numeric, throw error
+		if (!ctype_alpha(str_replace(array("'", "-"), "",$first_name))) { 
+			$error .= '<p class="error">First name should be alpha characters only.</p>';
+            $verifyOk=0;
+
+		}
+		// if first_name is not 3-20 characters long, throw error
+		if (strlen($first_name) < 3 OR strlen($first_name) > 20) {
+			$error .= '<p class="error">First name should be within 3-20 characters long.</p>';
+            $verifyOk=0;
+
+		}
+ 
+	# Validate Last Name #
+		// if its not alpha numeric, throw error
+		if (!ctype_alpha(str_replace(array("'", "-"), "", $last_name))) { 
+			$error .= '<p class="error">Last name should be alpha characters only.</p>';
+            $verifyOk=0;
+		}
+		// if first_name is not 3-20 characters long, throw error
+		if (strlen($last_name) < 3 OR strlen($last_name) > 20) {
+			$error .= '<p class="error">Last name should be within 3-20 characters long.</p>';
+            $verifyOk=0;
+		}
+
+        	# Validate Email #
+		// if email is invalid, throw error
+		if (!filter_var($email, FILTER_VALIDATE_EMAIL)) { // you can also use regex to do same
+			$error .= '<p class="error">Enter a valid email address.</p>';
+            $verifyOk=0;
+		}
 $target_dir = "uploads/";
 $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
 $uploadOk = 1;
-$uploadfinal = 0;
 $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
-// Check if image file is a actual image or fake image
 if(isset($_POST["submit"])) {
+
+
+// Check if image file is a actual image or fake image
+
     $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
     if($check !== false) {
         //echo "File is an image - " . $check["mime"] . ".";
@@ -99,16 +138,15 @@ if ($uploadOk == 0) {
 } else {
     $uploadfinal=1;
 }
-if($uploadfinal == 1){
+if($uploadfinal == 1 && $verifyOk == 1){
 
     $result2 = mysqli_query($conn, "SELECT Id FROM users ORDER BY Id DESC 
                         LIMIT 1");
     $row2 = $result2->fetch_row();
-    echo $row2;
     $row2[0]++;
 
     $sql = "INSERT INTO users (Id, first_name, last_name, email,user_image)
-    VALUES ('$row2[0]','".$_POST['first_name']."', '".$_POST['last_name']."','".$_POST['email']."','$target_file')";
+    VALUES ('$row2[0]','$first_name', '$last_name','".$_POST['email']."','$target_file')";
 
 if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file) ) {
         //echo "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.";
@@ -128,6 +166,11 @@ if($bool){
     } 
 }
 header( "refresh:1;url=index.php" );
+
+}
+else{
+  echo "The data you entered isn't valid. Try again.";
+  header( "refresh:1;url=create.php" );
 
 }
 

@@ -67,14 +67,58 @@ $_POST  = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
 if ($_POST['submit']) {
 
-    $sql = "UPDATE users SET first_name='".$_POST['new_first_name']."', last_name='".$_POST['new_last_name']."', email= '".$_POST['new_email']."' WHERE Id=".$_POST['entry_id'];
+  	#### removing extra white spaces & escaping harmful characters ####
+	$first_name 		= trim($_POST['new_first_name']);
+	$last_name 			= trim($_POST['new_last_name']);
+	$email 				  = $_POST['new_email'];
+  $verifyOk       = 1 ;
 
+	# Validate First Name #
+		// if its not alpha numeric, throw error
+		if (!ctype_alpha(str_replace(array("'", "-"), "",$first_name))) { 
+			$error .= '<p class="error">First name should be alpha characters only.</p>';
+      $verifyOk=0;
+		}
+		// if first_name is not 3-20 characters long, throw error
+		if (strlen($first_name) < 3 OR strlen($first_name) > 20) {
+			$error .= '<p class="error">First name should be within 3-20 characters long.</p>';
+      $verifyOk=0;
+		}
+ 
+	# Validate Last Name #
+		// if its not alpha numeric, throw error
+		if (!ctype_alpha(str_replace(array("'", "-"), "", $last_name))) { 
+			$error .= '<p class="error">Last name should be alpha characters only.</p>';
+     $verifyOk=0;
+		}
+		// if last_name is not 3-20 characters long, throw error
+		if (strlen($last_name) < 3 OR strlen($last_name) > 20) {
+			$error .= '<p class="error">Last name should be within 3-20 characters long.</p>';
+      $verifyOk=0;
+		}
+
+        	# Validate Email #
+		// if email is invalid, throw error
+		if (!filter_var($email, FILTER_VALIDATE_EMAIL)) { // you can also use regex to do same
+			$error .= '<p class="error">Enter a valid email address.</p>';
+      $verifyOk=0;
+		}
+  if($verifyOk == 1){
+
+    $sql = "UPDATE users SET first_name='".$_POST['new_first_name']."', last_name='".$_POST['new_last_name']."', email= '".$_POST['new_email']."' WHERE Id=".$_POST['entry_id'];
     if (mysqli_query($conn, $sql)) {
         echo "User updated successfully. You will be redirected to the home page";
     } else {
         echo "Error: " . $sql . "<br>" . mysqli_error($conn) . ". You will be redirected to the home page";
+        
     } 
     header( "refresh:1;url=index.php" );
+
+  }
+  else{
+      echo "The data you entered isn't valid. Try again.";
+  }
+
 
 }
 
