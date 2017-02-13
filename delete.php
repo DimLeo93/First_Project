@@ -9,16 +9,19 @@ $_POST  = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
 $sql = "DELETE FROM users WHERE Id=".$_GET['id'];
 $sql2 = "SELECT * FROM users WHERE Id=".$_GET['id'];
+
 $result = mysqli_query($conn, $sql2);
 $row = $result->fetch_assoc();
-$def_image = $row["user_image"];
+
 
 if (mysqli_query($conn, $sql)) {
-    if($def_image!= "uploads/default.jpg")
-        unlink($def_image);
+    if($row["user_image"]!= NULL){
+        unlink($row["user_image"]);
+    }
     echo "Record deleted successfully. You will be redirected to the home page";
 } else {
     echo "Error: " . $sql . "<br>" . mysqli_error($conn) . ". You will be redirected to the home page";
 }
 header( "refresh:1;url=index.php" );
+
 ?> 
