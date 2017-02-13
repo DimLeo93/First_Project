@@ -2,26 +2,7 @@
     <head>
        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-       <style> 
-            input[type=text] {
-                width: 130px;
-                box-sizing: border-box;
-                border: 2px solid #ccc;
-                border-radius: 4px;
-                font-size: 16px;
-                background-color: white;
-                background-image: url('searchicon.png');
-                background-position: 10px 10px; 
-                background-repeat: no-repeat;
-                padding: 12px 20px 12px 40px;
-                -webkit-transition: width 0.4s ease-in-out;
-                transition: width 0.4s ease-in-out;
-            }
-
-            input[type=text]:focus {
-                width: 100%;
-            }
-       </style>
+ 
     </head>
 
 <?php
@@ -45,17 +26,20 @@ $sql = "SELECT COUNT(*) AS total FROM users WHERE first_name LIKE '%$term%' OR l
 $result = mysqli_query($conn, $sql);
 $row = mysqli_fetch_assoc($result);
 $total_pages = ceil($row['total'] / $results_per_page); // calculate total pages with results
-  
-
 ?>
  <div class="container">
-
-
-        <div class="col-md-10 col-md-offset-1">
-            <form action="" method="get">
-               <input type="text" name="term"><br>
-               <input type="submit" name="submit" value="Search.."/> 
-             </form> 
+     <div class="col-md-2">
+        <form action="" method="get">
+            <div class="form-group has-feedback">
+                <input type="text" class="form-control" id="term" name="term" placeholder="Search for...">
+                <span class="glyphicon glyphicon-search form-control-feedback"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>             
+        </form> 
+    </div>
+</div>
+ <div class="container">
+        <div class="col-md-12">
             <h1> Database Results </h1>
             <?php
             for ($i=1; $i<=$total_pages; $i++) {  // print links for all pages
@@ -65,7 +49,7 @@ $total_pages = ceil($row['total'] / $results_per_page); // calculate total pages
                         echo ">".$i."</a> "; 
             }
             ?> 
-        <table class="table table-striped table-condensed table-bordered table-rounded">
+        <table class="table table-striped table-condensed table-bordered table-rounded header-fixed">
             <thead>
                 <tr>
                     <th>Photo</th>
