@@ -13,10 +13,10 @@ include 'connect.php';
 include 'header.php'; 
 
 
-    $sql = "SELECT user_image FROM users WHERE Id=".$_GET['id'];
-    $result = mysqli_query($conn, $sql);
-    $row = $result->fetch_assoc();
-    $def_image = $row["user_image"];
+    $sql = "SELECT * FROM users WHERE Id=".$_GET['id'];
+    $result4 = mysqli_query($conn, $sql);
+    $row4 = $result4->fetch_assoc();
+    $def_image = $row4["user_image"];
 
 
 ?>
@@ -117,6 +117,8 @@ if($uploadfinal == 1){
     } else {
         echo "Error: " . $sql . "<br>" . mysqli_error($conn);
     } 
+    header( "refresh:1;url=index.php" );
+
 }
 }
 ?>

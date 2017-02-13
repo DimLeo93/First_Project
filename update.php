@@ -70,10 +70,12 @@ if ($_POST['submit']) {
     $sql = "UPDATE users SET first_name='".$_POST['new_first_name']."', last_name='".$_POST['new_last_name']."', email= '".$_POST['new_email']."' WHERE Id=".$_POST['entry_id'];
 
     if (mysqli_query($conn, $sql)) {
-        echo "User updated successfully";
+        echo "User updated successfully. You will be redirected to the home page";
     } else {
-        echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+        echo "Error: " . $sql . "<br>" . mysqli_error($conn) . ". You will be redirected to the home page";
     } 
+    header( "refresh:1;url=index.php" );
+
 }
 
 ?>

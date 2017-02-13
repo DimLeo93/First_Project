@@ -101,8 +101,10 @@ if ($uploadOk == 0) {
 }
 if($uploadfinal == 1){
 
-    $result2 = mysqli_query($conn, "SELECT count(*) FROM users");
+    $result2 = mysqli_query($conn, "SELECT Id FROM users ORDER BY Id DESC 
+                        LIMIT 1");
     $row2 = $result2->fetch_row();
+    echo $row2;
     $row2[0]++;
 
     $sql = "INSERT INTO users (Id, first_name, last_name, email,user_image)
@@ -118,13 +120,14 @@ if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file) ) {
     }
 if($bool){
     if (mysqli_query($conn, $sql)) {
-        echo "User added";
+        echo "User added. You will be redirected to the home page";
     } else {
         unlink($target_file); //if the create has an error, delete the new picture that was uploaded
         echo "image has been deleted" .  "<br/>\n";
         echo "Error: " . $sql . "<br>" . mysqli_error($conn);
     } 
 }
+header( "refresh:1;url=index.php" );
 
 }
 
